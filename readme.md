@@ -169,3 +169,12 @@ List of aliases to quickly define keyword.
 | Keyword: Update php uses                |
 | Keyword: Create python import at cursor |
 | Keyword: Create php use at cursor       |
+
+
+### Dependencies
+
+- https://github.com/shagabutdinov/sublime-expression
+- https://github.com/shagabutdinov/sublime-statement
+- https://github.com/shagabutdinov/sublime-quick-search-enhanced
+- https://github.com/shagabutdinov/sublime-context
+- https://github.com/shagabutdinov/sublime-project-files
