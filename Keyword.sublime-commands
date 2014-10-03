@@ -1,0 +1,55 @@
+[
+  {
+    "caption": "Keyword: Show python imports",
+    "command": "show_keywords",
+    "args": {"keyword_type": "python.import"},
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
+    ]
+  },
+
+  {
+    "caption": "Keyword: Show php uses",
+    "command": "show_keywords",
+    "args": {"keyword_type": "php.use"},
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+
+  {
+    "caption": "Keyword: Update python imports",
+    "command": "update_keywords",
+    "args": {"keywords": ["python.import"]},
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
+    ]
+  },
+
+  {
+    "caption": "Keyword: Update php uses",
+    "command": "update_keywords",
+    "args": {"keywords": ["php.use"]},
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+
+  {
+    "caption": "Keyword: Create python import at cursor",
+    "command": "create_keyword_at_cursor",
+    "args": {"keyword_type": "python.import"},
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
+    ]
+  },
+
+  {
+    "caption": "Keyword: Create php use at cursor",
+    "command": "create_keyword_at_cursor",
+    "args": {"keyword_type": "php.use"},
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+]

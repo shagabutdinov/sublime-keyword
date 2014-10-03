@@ -1,0 +1,83 @@
+[
+  {
+    "keys": ["ctrl+u", "ctrl+i"],
+    "command": "show_keywords",
+    "args": {
+      "keyword_type": "python.import"
+    },
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+u", "ctrl+i"],
+    "command": "show_keywords",
+    "args": {
+      "keyword_type": "php.use"
+    },
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+u", "i"],
+    "command": "update_keywords",
+    "args": {
+      "keywords": ["python.import"]
+    },
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+u", "i"],
+    "command": "update_keywords",
+    "args": {
+      "keywords": ["php.use"]
+    },
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+alt+e"],
+    "command": "create_keyword_at_cursor",
+    "args": {
+      "keyword_type": "python.import"
+    },
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+alt+e"],
+    "command": "create_keyword_at_cursor",
+    "args": {
+      "keyword_type": "php.use"
+    },
+    "context": [
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+d"],
+    "command": "delete_keyword_at_list",
+    "context": [
+      {"key": "search_panel_name", "operator": "regex_contains", "operand": "keyword"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+n"],
+    "command": "create_keyword_at_list",
+    "context": [
+      {"key": "search_panel_name", "operator": "regex_contains", "operand": "keyword"}
+    ]
+  }
+]

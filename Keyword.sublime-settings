@@ -1,0 +1,75 @@
+{
+
+  "python.import": {
+    "place": "(?<!\\.)import\\s.*((?<=[,\\\\])\n)*.*\n",
+    "new_place": "^",
+    "definition": {
+      "expression": "([\\w\\.]+)",
+      "scope": "source(?!.*keyword)",
+      "nesting": true,
+    },
+    "delete": "token",
+    "cleanup": true,
+    "snippets": [{
+        "contents": "import $value",
+      }, {
+        "contents": "from $word0 import $word1",
+        "context": [
+          {"key": "line", "operator": "regex_contains", "operand": "\\w+\\s+\\w+"}
+        ],
+      }, {
+        "contents": "$value",
+        "context": [
+          {"key": "line", "operator": "regex_contains",
+            "operand": "^\\s*(from|import)"}
+        ],
+      }
+    ],
+    "search": "\n(from\\s*[\\w+\\.]+\\s*import (\\w+))",
+    "aliases": {
+      "path": "from os import path"
+    }
+  },
+
+  // "ruby.instance_variable": {
+  //   "place": "\n(\\s*)def initialize[\\s\\S]+\\1end",
+  //   "definition": "(@\\w+)\\s*=",
+  //   "new_place": "def\\s*initialize",
+  // },
+
+  "php.use": {
+    "place": "use .*?\n",
+    "new_place": {
+      "expression": "^<\\?(php)?\n\n()",
+      "start": "end",
+    },
+    "new_place_fallback": {
+      "command": "insert_text",
+      "args": {
+        "point": 0,
+        "text": "<?php\n\n\n?>\n",
+      }
+    },
+    "definition": {
+      "expression": "([\\\\\\w]+)",
+      "scope": "source(?!.*keyword)",
+      "nesting": true,
+    },
+    "delete": "token",
+    "cleanup": true,
+    "snippets": [{
+      "contents": "use $value;",
+    }],
+    "search": "\n\\s*(use .*?\\\\(\\w+);)",
+    "aliases": {
+
+    }
+  },
+
+  // "php.instance_variable": {
+  //   "place": "class[\\s\\S]*function",
+  //   "new_place": "class",
+  //   "definition": "(?:public|protected|private)\\s*(\\$\\w+)",
+  // }
+
+}
