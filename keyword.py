@@ -2,11 +2,17 @@ import sublime
 import sublime_plugin
 import re
 
-from Expression import expression
-from Statement import statement
-from QuickSearchEnhanced.quick_search import panels
-from Context import context
-from ProjectFiles.project_files import ProjectFiles
+try:
+  from Expression import expression
+  from Statement import statement
+  from QuickSearchEnhanced.quick_search import panels
+  from Context import context
+  from ProjectFiles.project_files import ProjectFiles
+except ImportError:
+  sublime.error_message("Dependency import failed; please read readme for " +
+   "AutoImport plugin for installation instructions; to disable this " +
+   "message remove this plugin")
+
 
 class Keyword():
 

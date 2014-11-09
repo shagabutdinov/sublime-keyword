@@ -6,6 +6,7 @@
       "keyword_type": "python.import"
     },
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
     ]
   },
@@ -17,6 +18,7 @@
       "keyword_type": "php.use"
     },
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
     ]
   },
@@ -28,6 +30,7 @@
       "keywords": ["python.import"]
     },
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
     ]
   },
@@ -39,6 +42,7 @@
       "keywords": ["php.use"]
     },
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
     ]
   },
@@ -50,6 +54,7 @@
       "keyword_type": "python.import"
     },
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "python"}
     ]
   },
@@ -61,6 +66,7 @@
       "keyword_type": "php.use"
     },
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
     ]
   },
@@ -69,6 +75,7 @@
     "keys": ["ctrl+d"],
     "command": "delete_keyword_at_list",
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "search_panel_name", "operator": "regex_contains", "operand": "keyword"}
     ]
   },
@@ -77,6 +84,7 @@
     "keys": ["ctrl+n"],
     "command": "create_keyword_at_list",
     "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "search_panel_name", "operator": "regex_contains", "operand": "keyword"}
     ]
   }

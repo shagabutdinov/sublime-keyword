@@ -173,8 +173,9 @@ List of aliases to quickly define keyword.
 
 ### Dependencies
 
-- https://github.com/shagabutdinov/sublime-expression
-- https://github.com/shagabutdinov/sublime-statement
-- https://github.com/shagabutdinov/sublime-quick-search-enhanced
-- https://github.com/shagabutdinov/sublime-context
-- https://github.com/shagabutdinov/sublime-project-files
+* [Expression](https://github.com/shagabutdinov/sublime-expression)
+* [Statement](https://github.com/shagabutdinov/sublime-statement)
+* [QuickSearchEnhanced](https://github.com/shagabutdinov/sublime-quick-search-enhanced)
+* [Context](https://github.com/shagabutdinov/sublime-context)
+* [ProjectFiles](https://github.com/shagabutdinov/sublime-project-files)
+* [SnippetCaller](https://github.com/shagabutdinov/sublime-snippet-caller)
