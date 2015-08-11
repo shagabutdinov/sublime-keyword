@@ -38,9 +38,10 @@
   // },
 
   "php.use": {
-    "place": "use .*?\n",
+    "place": "(?<=\n)use .*?\n",
     "new_place": {
-      "expression": "^<\\?(php)?\n\n()",
+      "new_lines": true,
+      "expression": "^<\\?(?:php)?[ \t]*\n\n(?:\\s*namespace.*?;\n)?()",
       "start": "end",
     },
     "new_place_fallback": {
@@ -52,6 +53,7 @@
     },
     "definition": {
       "expression": "([\\\\\\w]+)",
+      "short": "(\\w+)$",
       "scope": "source(?!.*keyword)",
       "nesting": true,
     },
@@ -61,6 +63,31 @@
       "contents": "use $value;",
     }],
     "search": "\n\\s*(use .*?\\\\(\\w+);)",
+    "aliases": {
+
+    }
+  },
+
+  "php.property": {
+    "place": "private \\$(\\w+);",
+    "new_place": {
+      "new_line": true,
+      "at_cursor": true,
+      "expression": "(trait|class).*{\n",
+      "start": "end",
+      "backward": true,
+      "nesting": false,
+    },
+    "definition": {
+      "expression": "(\\w+)",
+      "scope": "source(?!.*property)",
+    },
+    "delete": "token",
+    "cleanup": false,
+    "snippets": [{
+      "contents": "\tprivate \\$$value;",
+    }],
+    "search": "\n\\s*(private \\$(\\w+);)",
     "aliases": {
 
     }

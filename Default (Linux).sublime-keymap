@@ -1,6 +1,6 @@
 [
   {
-    "keys": ["ctrl+u", "ctrl+i"],
+    "keys": ["ctrl+u", "ctrl+k"],
     "command": "show_keywords",
     "args": {
       "keyword_type": "python.import"
@@ -12,7 +12,7 @@
   },
 
   {
-    "keys": ["ctrl+u", "ctrl+i"],
+    "keys": ["ctrl+u", "ctrl+k"],
     "command": "show_keywords",
     "args": {
       "keyword_type": "php.use"
@@ -24,7 +24,7 @@
   },
 
   {
-    "keys": ["ctrl+u", "i"],
+    "keys": ["ctrl+u", "k"],
     "command": "update_keywords",
     "args": {
       "keywords": ["python.import"]
@@ -36,7 +36,7 @@
   },
 
   {
-    "keys": ["ctrl+u", "i"],
+    "keys": ["ctrl+u", "k"],
     "command": "update_keywords",
     "args": {
       "keywords": ["php.use"]
@@ -68,6 +68,19 @@
     "context": [
       {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
       {"key": "scope_b", "operator": "regex_contains", "operand": "php"}
+    ]
+  },
+
+  {
+    "keys": ["ctrl+alt+e"],
+    "command": "create_keyword_at_cursor",
+    "args": {
+      "keyword_type": "php.property"
+    },
+    "context": [
+      {"key": "setting.sublime_enhanced_keybindings", "operator": "equal", "operand": true},
+      {"key": "scope_b", "operator": "regex_contains", "operand": "php"},
+      {"key": "preceding_text_begin", "operator": "regex_contains", "operand": "->\\w+$"}
     ]
   },
 

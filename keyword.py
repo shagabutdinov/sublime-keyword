@@ -20,7 +20,7 @@ class Keyword():
     self.view = view
     self.type = type
 
-    settings = self._load_setting()
+    settings = self._load_settings()
     if settings == None:
       raise Exception('Unknown type "' + self.type + '"')
 
@@ -35,7 +35,7 @@ class Keyword():
     self.aliases = settings.get('aliases', None)
     self.search = settings.get('search', None)
 
-  def _load_setting(self):
+  def _load_settings(self):
     result = {}
     for resource in sublime.find_resources('Keyword.sublime-settings'):
       settings = sublime.decode_value(sublime.load_resource(resource))
@@ -135,17 +135,25 @@ class Keyword():
 
   def get_insert_info(self, view_or_snippet_index, keyword = None):
     keywords = self.get()
+
     extra = None
     if len(keywords) == 0:
       if self.new_place == None:
         return None
 
-      _, result, _ = expression.find(self.view, 0, self.new_place)
+      position = 0
+      if self.new_place.get('at_cursor', False):
+        position = self.view.sel()[0].begin()
+      _, result, _ = expression.find(self.view, position, self.new_place)
 
       fallback = self.new_place_fallback
-      if result == None and fallback != None:
+      if result != None:
+        found = 'new_place'
+      elif fallback != None:
         self.view.run_command(fallback['command'], fallback['args'])
         _, result, _ = expression.find(self.view, 0, self.new_place)
+        if result != None:
+          found = 'new_place_fallback'
 
       if result == None:
         return None
@@ -159,12 +167,13 @@ class Keyword():
 
       line = self.view.line(container[0])
       result = line.end() + 1
+      found = 'last_keyword'
 
     snippets = self._get_snippets(view_or_snippet_index, keyword)
     if snippets == None or self._is_definition_exist(snippets):
       return None
 
-    return result, snippets
+    return result, snippets, found
 
   def _is_definition_exist(self, snippets, places = None):
     for snippet in snippets:
@@ -280,11 +289,11 @@ class Base(sublime_plugin.TextCommand):
   def _refresh(self, panel):
     panel.set_values(self._get_panel_values())
 
-  def _create(self, view, position, snippet):
+  def _create(self, view, position, snippet, found):
     view.add_regions('keyword', view.sel())
 
     # placeholder; for some reason spaces are removed from new lines
-    view.run_command('insert', {'characters': "P"})
+    # view.run_command('insert', {'characters': "P"})
 
     view.sel().clear()
     view.sel().add(sublime.Region(position, position))
@@ -292,11 +301,21 @@ class Base(sublime_plugin.TextCommand):
 
     view.sel().clear()
     view.sel().add(sublime.Region(position, position))
+
+    ensure_new_lines = (
+      found == 'new_place' and
+      self.keyword.new_place != None and
+      self.keyword.new_place.get('new_lines', False) == True
+    )
+
+    if ensure_new_lines:
+      view.run_command('ensure_lines_around')
+
     view.run_command('insert_snippet_enhanced', snippet)
 
     view.sel().clear()
     view.sel().add_all(view.get_regions('keyword'))
-    view.run_command('left_delete')
+    # view.run_command('left_delete')
 
   def _get_insert_info(self, view_or_snippet_index, text, snippet = None):
     if self.keyword.get(text) != None:
@@ -306,11 +325,11 @@ class Base(sublime_plugin.TextCommand):
     if insert_info == None:
       return None
 
-    position, new_snippet = insert_info
+    position, new_snippet, found = insert_info
     if snippet == None:
       snippet = new_snippet
 
-    return position, snippet
+    return position, snippet, found
 
 class ShowKeywords(Base):
   def run(self, edit, keyword_type):
@@ -325,8 +344,8 @@ class CreateKeyword(Base):
     if insert_info == None:
       return
 
-    position, snippets = insert_info
-    self._create(self.view, position, snippets[0])
+    position, snippets, found = insert_info
+    self._create(self.view, position, snippets[0], found)
     self.view.set_viewport_position(viewport)
 
 class CreateKeywordAtCursor(Base):
@@ -339,13 +358,13 @@ class CreateKeywordAtCursor(Base):
     self.keyword = Keyword(self.view, keyword_type)
     selection = self.view.sel()[0]
 
-    insert_info = self._get_insert_info(selection)
+    insert_info = self._get_insert_info(selection, edit)
     if insert_info == None:
       return
 
-    self.position, snippets = insert_info
+    self.position, snippets, self.found = insert_info
     if len(snippets) == 1:
-      self._insert(self.position, snippets[0])
+      self._insert(self.position, snippets[0], self.found)
     else:
       values = []
       for snippet in snippets:
@@ -354,21 +373,54 @@ class CreateKeywordAtCursor(Base):
       panel = panels.create(values, self._insert_from_panel).show()
 
   def _insert_from_panel(self, panel):
-    self._create(self.view, self.position, panel.get_current_value())
+    value = panel.get_current_value()
+    self._create(self.view, self.position, value, self.found)
 
-  def _insert(self, position, snippet):
-    self._create(self.view, position, snippet)
+  def _insert(self, position, snippet, found):
+    self._create(self.view, position, snippet, found)
     self.view.set_viewport_position(self.viewport)
 
-  def _get_insert_info(self, selection):
+  def _get_insert_info(self, selection, edit):
     if selection.empty():
-      selection = self.view.word(selection.b)
+      line = self.view.line(selection.b)
+      prefix = self.view.substr(sublime.Region(line.a, selection.b))
+      postfix = self.view.substr(sublime.Region(selection.b, line.b))
 
-    text = self.view.substr(selection)
-    if text == '':
+      definition = self.keyword.definition['expression']
+      prefix_match = re.search(definition + '$', prefix)
+      postfix_match = re.search('^' + definition, postfix)
+
+      start, end = selection.b, selection.b
+
+      if prefix_match != None:
+        start -= len(prefix_match.group(1))
+
+      if postfix_match != None:
+        end += len(postfix_match.group(1))
+
+      if start == end:
+        return None
+
+      selection = sublime.Region(start, end)
+
+    keyword = self.view.substr(selection)
+    if keyword == '':
       return None
 
-    return super()._get_insert_info(self.view, text)
+    short = self.keyword.definition.get('short')
+    match = short != None and re.search(short, keyword) or None
+    if match != None and match.group(1) != keyword:
+      self.view.replace(edit, selection, match.group(1))
+      while(True):
+        text = self.view.substr(sublime.Region(0, self.view.size()))
+        position = text.find(keyword)
+        if position == -1:
+          break
+
+        replacement = sublime.Region(position, position + len(keyword))
+        self.view.replace(edit, replacement, match.group(1))
+
+    return super()._get_insert_info(self.view, keyword)
 
 class CreateKeywordAtList(Base):
   def run(self, edit):
@@ -376,8 +428,8 @@ class CreateKeywordAtList(Base):
     if info == None:
       return None
 
-    panel, position, snippet = info
-    self._create(panel.get_opener(), position, snippet)
+    panel, position, snippet, found = info
+    self._create(panel.get_opener(), position, snippet, found)
     self._refresh(panel)
 
   def _get_insert_info(self):
@@ -394,7 +446,7 @@ class CreateKeywordAtList(Base):
     if info == None:
       return None
 
-    return panel, info[0], info[1]
+    return panel, info[0], info[1], info[2]
 
 class DeleteKeywordAtList(Base):
   def run(self, edit):
